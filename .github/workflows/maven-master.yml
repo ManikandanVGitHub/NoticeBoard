@@ -93,11 +93,7 @@ jobs:
         creds: '${{ secrets.AZURE_CREDENTIALS }}'
         cluster-name: ${{ env.CLUSTER_NAME }}
         resource-group: ${{ env.CLUSTER_RESOURCE_GROUP }}
-    
-    # Create namespace if doesn't exist
-   - run: |
-        kubectl create namespace java --dry-run -o json | kubectl apply -f -
-    
+
     # Create image pull secret for ACR
    - uses: azure/k8s-create-secret@v1
      with:
@@ -107,15 +103,15 @@ jobs:
         secret-name: docker
         namespace: java
         force: true
+   - name: Setup Helm3
+     run: |-
+          curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
+          chmod 700 get_helm.sh
+          ./get_helm.sh
+          helm repo add bitnami https://charts.bitnami.com/bitnami
+   - name: Deploy
+     run: helm upgrade --set global.postgresql.postgresqlDatabase=postgres  --set global.postgresql.postgresqlUsername=postgres --set global.postgresql.postgresqlPassword=${{ secrets.PSG_PASS }} my-release bitnami/postgresql --namespace $APP_NAME --create-namespace
+
+
+
     
-    # Deploy app to AKS
-   - uses: azure/k8s-deploy@v1.4
-     with:
-        manifests: |
-          deployment.yaml
-          service.yaml
-        images: |
-          kannappansenthilnathan/crud:${{ github.sha }}
-        imagepullsecrets: |
-          ${{ env.SECRET }}
-        namespace: java
