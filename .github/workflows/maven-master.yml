@@ -112,8 +112,8 @@ jobs:
    - uses: azure/k8s-deploy@v1
      with:
         manifests: |
-          deployment.yml
-          service.yml
+          deployment.yaml
+          service.yaml
         images: |
           $REPO:${GITHUB_SHA::8}
         imagepullsecrets: |
