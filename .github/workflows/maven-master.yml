@@ -101,7 +101,7 @@ jobs:
         container-registry-username: ${{ secrets.DOCKER_USER }}
         container-registry-password: ${{ secrets.DOCKER_PASS }}
         secret-name: docker
-        namespace: $APP_NAME
+        namespace: ${{ env.APP_NAME }}
         force: true
    - name: Setup Helm3
      run: |-
