@@ -86,6 +86,7 @@ jobs:
      APP_NAME: demo
 
    steps:
+   - uses: actions/checkout@v1
     # Set the target Azure Kubernetes Service (AKS) cluster. 
    - uses: azure/aks-set-context@v1
      with:
