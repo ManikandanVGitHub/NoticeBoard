@@ -71,9 +71,9 @@ jobs:
       - name: Login to Docker Hub
         run: docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASS }}
       - name: Build Docker image
-        run: docker build -t $REPO:${GITHUB_SHA::8} .
+        run: docker build -t $REPO:${{ github.sha }} .
       - name: Publish Docker image
-        run: docker push $REPO:${GITHUB_SHA::8}
+        run: docker push $REPO:${{ github.sha }}
 
   deploy:
    name: deploy to k8s
@@ -115,7 +115,7 @@ jobs:
           deployment.yaml
           service.yaml
         images: |
-          $REPO:${{ github.sha::8 }}
+          $REPO:${{ github.sha }}
         imagepullsecrets: |
           ${{ env.SECRET }}
         namespace: java
