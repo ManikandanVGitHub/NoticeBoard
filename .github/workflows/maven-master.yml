@@ -101,7 +101,7 @@ jobs:
         container-registry-username: ${{ secrets.DOCKER_USER }}
         container-registry-password: ${{ secrets.DOCKER_PASS }}
         secret-name: docker
-        namespace: java
+        namespace: $APP_NAME
         force: true
    - name: Setup Helm3
      run: |-
@@ -109,9 +109,10 @@ jobs:
           chmod 700 get_helm.sh
           ./get_helm.sh
           helm repo add bitnami https://charts.bitnami.com/bitnami
-   - name: Deploy
+   - name: Deploy Postgres
      run: helm upgrade --set global.postgresql.postgresqlDatabase=postgres  --set global.postgresql.postgresqlUsername=postgres --set global.postgresql.postgresqlPassword=${{ secrets.PSG_PASS }} --install my-release bitnami/postgresql --namespace $APP_NAME --create-namespace
-
+   - name: Deploy BackendApp
+     run: helm upgrade --set image.tag=${{ github.sha }} --install crud-release ./deployment/helm/ --namespace $APP_NAME --create-namespace
 
 
     
