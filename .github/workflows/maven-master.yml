@@ -75,3 +75,46 @@ jobs:
       - name: Publish Docker image
         run: docker push $REPO
 
+  deploy:
+   name: deploy to k8s
+   runs-on: ubuntu-18.04
+   needs: [test, sonar,docker]
+   env:
+     REPO: ${{ secrets.DOCKER_REPO }}
+     CLUSTER_NAME: aks-cluster
+     CLUSTER_RESOURCE_GROUP: aks-kanna
+     APP_NAME: demo
+
+   steps:
+    # Set the target Azure Kubernetes Service (AKS) cluster. 
+   - uses: azure/aks-set-context@v1
+     with:
+        creds: '${{ secrets.AZURE_CREDENTIALS }}'
+        cluster-name: ${{ env.CLUSTER_NAME }}
+        resource-group: ${{ env.CLUSTER_RESOURCE_GROUP }}
+    
+    # Create namespace if doesn't exist
+   - run: |
+        kubectl create namespace java --dry-run -o json | kubectl apply -f -
+    
+    # Create image pull secret for ACR
+   - uses: azure/k8s-create-secret@v1
+     with:
+        container-registry-url:  https://registry.hub.docker.com
+        container-registry-username: ${{ secrets.DOCKER_USER }}
+        container-registry-password: ${{ secrets.DOCKER_PASS }}
+        secret-name: docker
+        namespace: java
+        force: true
+    
+    # Deploy app to AKS
+   - uses: azure/k8s-deploy@v1
+     with:
+        manifests: |
+          manifests/deployment.yml
+          manifests/service.yml
+        images: |
+          $REPO:${GITHUB_SHA::8}
+        imagepullsecrets: |
+          ${{ env.SECRET }}
+        namespace: java
