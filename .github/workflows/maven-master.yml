@@ -25,7 +25,7 @@ jobs:
         uses: EnricoMi/publish-unit-test-result-action@v1
         if: always()
         with:
-          files: target/**/*.xml
+          files: target/surefire-reports/*.xml
 
   sonar:
     name: Test - SonarCloud Scan
