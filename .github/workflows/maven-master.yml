@@ -115,7 +115,7 @@ jobs:
           deployment.yaml
           service.yaml
         images: |
-          $REPO:${GITHUB_SHA::8}
+          $REPO:${{ GITHUB_SHA::8 }}
         imagepullsecrets: |
           ${{ env.SECRET }}
         namespace: java
