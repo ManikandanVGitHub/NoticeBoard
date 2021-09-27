@@ -82,7 +82,7 @@ jobs:
    env:
      REPO: ${{ secrets.DOCKER_REPO }}
      CLUSTER_NAME: aks-cluster
-     CLUSTER_RESOURCE_GROUP: aks-kanna
+     CLUSTER_RESOURCE_GROUP: kubernetes-rg
      APP_NAME: demo
 
    steps:
