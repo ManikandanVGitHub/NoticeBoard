@@ -115,7 +115,7 @@ jobs:
           deployment.yaml
           service.yaml
         images: |
-          $REPO:${{ github.sha }}
+          kannappansenthilnathan/crud:${{ github.sha }}
         imagepullsecrets: |
           ${{ env.SECRET }}
         namespace: java
