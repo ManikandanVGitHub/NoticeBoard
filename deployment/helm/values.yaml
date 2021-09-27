@@ -9,7 +9,7 @@ image:
   tag: latest
   pullPolicy: Always
 
-imagePullSecrets: [docker]
+imagePullSecrets: [name: docker]
 nameOverride: "github-actions-test"
 fullnameOverride: "github-actions-test"
 
