@@ -110,7 +110,7 @@ jobs:
           ./get_helm.sh
           helm repo add bitnami https://charts.bitnami.com/bitnami
    - name: Deploy
-     run: helm upgrade --set global.postgresql.postgresqlDatabase=postgres  --set global.postgresql.postgresqlUsername=postgres --set global.postgresql.postgresqlPassword=${{ secrets.PSG_PASS }} my-release bitnami/postgresql --namespace $APP_NAME --create-namespace
+     run: helm upgrade --set global.postgresql.postgresqlDatabase=postgres  --set global.postgresql.postgresqlUsername=postgres --set global.postgresql.postgresqlPassword=${{ secrets.PSG_PASS }} --install my-release bitnami/postgresql --namespace $APP_NAME --create-namespace
 
 
 
