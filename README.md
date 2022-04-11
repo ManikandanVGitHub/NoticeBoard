@@ -7,6 +7,7 @@ This is a simple RESTful CRUD (Create Read Update Delete) application for managi
 ![data-model](https://github.com/wkrzywiec/NoticeBoard/blob/master/pics/data-model.png)
 
 ## Usage
+## Mani V
 
 An application expose 5 REST endpoints for each entity. For example *Notice* (and any other) they are:
 
