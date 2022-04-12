@@ -230,8 +230,8 @@
 				<sonar.sources>.</sonar.sources>
 				<sonar.inclusions>src/main/java/**,src/main/resources/**</sonar.inclusions>
 				<sonar.exclusions>${code.coverage.exclusions}</sonar.exclusions>
-				<sonar.projectKey>crud-application</sonar.projectKey>
-				<sonar.organization>cts-demo</sonar.organization>
+				<sonar.projectKey>ManikandanVGitHub_NoticeBoard</sonar.projectKey>
+				<sonar.organization>ManikandanVGitHub</sonar.organization>
 				<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 			</properties>
 			<activation>
