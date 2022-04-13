@@ -75,44 +75,44 @@ jobs:
       - name: Publish Docker image
         run: docker push $REPO:${{ github.sha }}
 
-  deploy:
-   name: deploy to k8s
-   runs-on: ubuntu-18.04
-   needs: [test, sonar,docker]
-   env:
-     REPO: ${{ secrets.DOCKER_REPO }}
-     CLUSTER_NAME: aks-cluster
-     CLUSTER_RESOURCE_GROUP: kubernetes-rg
-     APP_NAME: demo
+ # deploy:
+   #name: deploy to k8s
+   #runs-on: ubuntu-18.04
+   #needs: [test, sonar,docker]
+   #env:
+     #REPO: ${{ secrets.DOCKER_REPO }}
+     #CLUSTER_NAME: aks-cluster
+     #CLUSTER_RESOURCE_GROUP: kubernetes-rg
+     #APP_NAME: demo
 
-   steps:
-   - uses: actions/checkout@v1
+   #steps:
+   #- uses: actions/checkout@v1
     # Set the target Azure Kubernetes Service (AKS) cluster. 
-   - uses: azure/aks-set-context@v1
-     with:
-        creds: '${{ secrets.AZURE_CREDENTIALS }}'
-        cluster-name: ${{ env.CLUSTER_NAME }}
-        resource-group: ${{ env.CLUSTER_RESOURCE_GROUP }}
+   #- uses: azure/aks-set-context@v1
+    # with:
+     #   creds: '${{ secrets.AZURE_CREDENTIALS }}'
+      #  cluster-name: ${{ env.CLUSTER_NAME }}
+       # resource-group: ${{ env.CLUSTER_RESOURCE_GROUP }}
 
     # Create image pull secret for ACR
-   - uses: azure/k8s-create-secret@v1
-     with:
-        container-registry-url:  https://registry.hub.docker.com
-        container-registry-username: ${{ secrets.DOCKER_USER }}
-        container-registry-password: ${{ secrets.DOCKER_PASS }}
-        secret-name: docker
-        namespace: ${{ env.APP_NAME }}
-        force: true
-   - name: Setup Helm3
-     run: |-
-          curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
-          chmod 700 get_helm.sh
-          ./get_helm.sh
-          helm repo add bitnami https://charts.bitnami.com/bitnami
-   - name: Deploy Postgres
-     run: helm upgrade --set global.postgresql.postgresqlDatabase=postgres  --set global.postgresql.postgresqlUsername=postgres --set global.postgresql.postgresqlPassword=${{ secrets.PSG_PASS }} --install my-release bitnami/postgresql --namespace $APP_NAME --create-namespace
-   - name: Deploy BackendApp
-     run: helm upgrade --set image.tag=${{ github.sha }} --install crud-release ./deployment/helm/ --namespace $APP_NAME --create-namespace
+   #- uses: azure/k8s-create-secret@v1
+    # with:
+     #   container-registry-url:  https://registry.hub.docker.com
+      #  container-registry-username: ${{ secrets.DOCKER_USER }}
+       # container-registry-password: ${{ secrets.DOCKER_PASS }}
+        #secret-name: docker
+        #namespace: ${{ env.APP_NAME }}
+        #force: true
+   #- name: Setup Helm3
+    # run: |-
+     #     curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
+      #    chmod 700 get_helm.sh
+       #   ./get_helm.sh
+        #  helm repo add bitnami https://charts.bitnami.com/bitnami
+   #- name: Deploy Postgres
+    # run: helm upgrade --set global.postgresql.postgresqlDatabase=postgres  --set global.postgresql.postgresqlUsername=postgres --set global.postgresql.postgresqlPassword=${{ secrets.PSG_PASS }} --install my-release bitnami/postgresql --namespace $APP_NAME --create-namespace
+   #- name: Deploy BackendApp
+    # run: helm upgrade --set image.tag=${{ github.sha }} --install crud-release ./deployment/helm/ --namespace $APP_NAME --create-namespace
 
 
     
